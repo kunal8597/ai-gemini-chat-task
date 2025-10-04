@@ -8,23 +8,23 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 10%;
+    --background: 220 13% 91%;
+    --foreground: 220 9% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 10%;
+    --card-foreground: 220 9% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 10%;
+    --popover-foreground: 220 9% 15%;
 
-    --primary: 262 83% 58%;
+    --primary: 262 80% 65%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 10% 10%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 9% 15%;
 
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 4% 46%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
     --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
@@ -32,42 +32,36 @@ All colors MUST be HSL.
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
-    --ring: 262 83% 58%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262 80% 65%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    /* Gemini gradient colors */
-    --gradient-start: 262 83% 58%;
+    /* Gradient colors */
+    --gradient-start: 262 80% 65%;
     --gradient-mid: 245 75% 62%;
     --gradient-end: 217 91% 60%;
-
-    /* Chat colors */
-    --chat-user-bg: 262 83% 58%;
-    --chat-ai-bg: 240 5% 96%;
-    --chat-user-text: 0 0% 100%;
-    --chat-ai-text: 240 10% 10%;
   }
 
   .dark {
-    --background: 240 10% 7%;
-    --foreground: 0 0% 98%;
+    --background: 222 14% 10%;
+    --foreground: 210 40% 98%;
 
-    --card: 240 8% 12%;
-    --card-foreground: 0 0% 98%;
+    --card: 222 14% 13%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 240 8% 12%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 222 14% 13%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 262 83% 58%;
+    --primary: 262 80% 65%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 4% 16%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 222 14% 18%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 240 4% 16%;
-    --muted-foreground: 240 5% 65%;
+    --muted: 222 14% 18%;
+    --muted-foreground: 215 20% 65%;
 
     --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
@@ -75,20 +69,14 @@ All colors MUST be HSL.
     --destructive: 0 63% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 4% 16%;
-    --input: 240 4% 16%;
-    --ring: 262 83% 58%;
+    --border: 222 14% 18%;
+    --input: 222 14% 18%;
+    --ring: 262 80% 65%;
 
-    /* Gemini gradient colors for dark mode */
-    --gradient-start: 262 83% 58%;
+    /* Gradient colors for dark mode */
+    --gradient-start: 262 80% 65%;
     --gradient-mid: 245 75% 62%;
     --gradient-end: 217 91% 60%;
-
-    /* Chat colors */
-    --chat-user-bg: 262 83% 58%;
-    --chat-ai-bg: 240 4% 16%;
-    --chat-user-text: 0 0% 100%;
-    --chat-ai-text: 0 0% 98%;
   }
 }
 
@@ -116,11 +104,15 @@ All colors MUST be HSL.
   }
 
   .animate-fade-in {
-    animation: fadeIn 0.3s ease-in;
+    animation: fadeIn 0.5s ease-in;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
+    animation: slideUp 0.5s ease-out;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
   @keyframes fadeIn {
@@ -135,7 +127,7 @@ All colors MUST be HSL.
   @keyframes slideUp {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(20px);
     }
     to {
       opacity: 1;
@@ -143,14 +135,31 @@ All colors MUST be HSL.
     }
   }
 
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
   .glass-effect {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .dark .glass-effect {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Fix for dropdown z-index and background */
+  [role="listbox"],
+  [data-radix-select-content],
+  [data-radix-popper-content-wrapper] {
+    z-index: 50 !important;
   }
 }

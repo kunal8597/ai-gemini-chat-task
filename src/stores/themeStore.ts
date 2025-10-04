@@ -9,7 +9,7 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      isDark: false,
+      isDark: true, // Default to dark mode to match aetherAI aesthetic
       toggleTheme: () =>
         set((state) => {
           const newIsDark = !state.isDark;
@@ -24,8 +24,12 @@ export const useThemeStore = create<ThemeState>()(
     {
       name: 'theme-storage',
       onRehydrateStorage: () => (state) => {
-        if (state?.isDark) {
+        // Default to dark mode on first load
+        const isDark = state?.isDark ?? true;
+        if (isDark) {
           document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
         }
       },
     }

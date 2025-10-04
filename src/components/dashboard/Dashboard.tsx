@@ -85,19 +85,31 @@ export const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold gradient-text">Gemini Chat</h1>
+      <header className="border-b bg-card/30 backdrop-blur-md sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
+              <MessageSquare className="w-5 h-5 text-primary" />
+            </div>
+            <h1 className="text-2xl font-bold gradient-text">Gemini Chat</h1>
+          </div>
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
               aria-label="Toggle theme"
+              className="rounded-xl"
             >
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
-            <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Logout">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleLogout} 
+              aria-label="Logout"
+              className="rounded-xl"
+            >
               <LogOut className="h-5 w-5" />
             </Button>
           </div>
@@ -108,20 +120,20 @@ export const Dashboard = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Search and Create */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 animate-slide-up">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 placeholder="Search chatrooms..."
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-10"
+                className="pl-12 h-12 bg-card/50 border-border/50 rounded-xl"
               />
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="gradient-primary">
-                  <Plus className="mr-2 h-4 w-4" />
+                <Button className="gradient-primary h-12 px-6 rounded-xl hover:opacity-90 transition-opacity">
+                  <Plus className="mr-2 h-5 w-5" />
                   New Chat
                 </Button>
               </DialogTrigger>
@@ -156,45 +168,50 @@ export const Dashboard = () => {
           </div>
 
           {/* Chatrooms List */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             {filteredChatrooms.length === 0 ? (
-              <div className="text-center py-16 space-y-4">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-muted">
-                  <MessageSquare className="w-10 h-10 text-muted-foreground" />
+              <div className="text-center py-20 space-y-6 animate-fade-in">
+                <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-card/50 backdrop-blur-sm border border-border/50">
+                  <MessageSquare className="w-12 h-12 text-muted-foreground" />
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">No chatrooms yet</h3>
-                  <p className="text-muted-foreground">
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-semibold">No chatrooms yet</h3>
+                  <p className="text-muted-foreground max-w-md mx-auto">
                     {searchQuery
-                      ? 'No chatrooms match your search'
-                      : 'Create your first chatroom to start chatting with AI'}
+                      ? 'No chatrooms match your search. Try different keywords.'
+                      : 'Create your first chatroom to start having intelligent conversations with AI'}
                   </p>
                 </div>
               </div>
             ) : (
-              filteredChatrooms.map((room) => (
+              filteredChatrooms.map((room, index) => (
                 <div
                   key={room.id}
-                  className="bg-card border rounded-lg p-4 hover:border-primary/50 transition-all cursor-pointer group animate-slide-up"
+                  className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-5 hover:border-primary/50 hover:bg-card/70 transition-all cursor-pointer group"
                   onClick={() => handleOpenChat(room.id)}
+                  style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg mb-1">{room.title}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {room.messages.length} messages •{' '}
-                        {new Date(room.createdAt).toLocaleDateString()}
-                      </p>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-lg mb-2 truncate">{room.title}</h3>
+                      <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <MessageSquare className="h-3.5 w-3.5" />
+                          {room.messages.length}
+                        </span>
+                        <span>•</span>
+                        <span>{new Date(room.createdAt).toLocaleDateString()}</span>
+                      </div>
                     </div>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="opacity-0 group-hover:opacity-100 transition-all rounded-xl hover:bg-destructive/10 shrink-0"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                          <Trash2 className="h-5 w-5 text-destructive" />
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>

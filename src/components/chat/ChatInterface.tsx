@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { BackgroundGradient } from "@/components/ui/bg-gradient";
 
 export const ChatInterface = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -133,145 +134,149 @@ export const ChatInterface = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm p-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h2 className="font-semibold">{activeChatroom.title}</h2>
-            <p className="text-sm text-muted-foreground">
-              {activeChatroom.messages.length} messages
-            </p>
-          </div>
-        </div>
-        <Button variant="ghost" size="icon" onClick={toggleTheme}>
-          {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-        </Button>
-      </header>
-
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {activeChatroom.messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center p-8 space-y-8">
-            <div className="text-center space-y-6 max-w-2xl animate-fade-in">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-card/50 backdrop-blur-sm border border-border/50">
-                <Sparkles className="w-12 h-12 text-primary animate-pulse-slow" />
-              </div>
-              <div className="space-y-3">
-                <h2 className="text-4xl md:text-5xl font-bold">
-                  Good to See You!
-                </h2>
-                <p className="text-xl text-muted-foreground font-light">
-                  How Can I be an Assistance?
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  I'm available 24/7 for you, ask me anything.
+    <div className="relative min-h-screen overflow-hidden">
+      <BackgroundGradient 
+        className="dark:opacity-85"
+        gradientFrom="hsl(var(--gradient-start))"
+        gradientTo="hsl(var(--gradient-end))"
+      />
+      <div className=" mx-auto p-4">
+        <div className="relative z-10 flex flex-col h-[calc(100vh-2rem)] rounded-xl overflow-hidden   backdrop-blur-sm">
+          {/* Header */}
+          <header className="border-b p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <div>
+                <h2 className="font-semibold">{activeChatroom.title}</h2>
+                <p className="text-sm  ">
+                  {activeChatroom.messages.length} messages
                 </p>
               </div>
             </div>
+          
+          </header>
 
-            {/* Suggestion Chips */}
-            <div className="w-full max-w-2xl">
-              <SuggestionChips onSuggestionClick={handleSuggestionClick} />
-            </div>
-          </div>
-        ) : (
-          <>
-            {activeChatroom.messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex gap-3 animate-slide-up group ${
-                  message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
-                }`}
-              >
-                <Avatar className="h-8 w-8 mt-1">
-                  <AvatarFallback
-                    className={
-                      message.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'gradient-primary text-white'
-                    }
-                  >
-                    {message.role === 'user' ? (
-                      <User className="h-4 w-4" />
-                    ) : (
-                      <Sparkles className="h-4 w-4" />
-                    )}
-                  </AvatarFallback>
-                </Avatar>
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {activeChatroom.messages.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center p-8 space-y-8">
+                <div className="text-center space-y-6 max-w-2xl animate-fade-in">
+                  <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-card/50 backdrop-blur-sm border border-border/50">
+                    <Sparkles className="w-12 h-12 text-primary animate-pulse-slow" />
+                  </div>
+                  <div className="space-y-3">
+                    <h2 className="text-4xl md:text-5xl font-bold">
+                      Good to See You!
+                    </h2>
+                    <p className="text-xl text-muted-foreground font-light">
+                      How Can I be an Assistance?
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      I'm available 24/7 for you, ask me anything.
+                    </p>
+                  </div>
+                </div>
 
-                <div
-                  className={`flex-1 max-w-[70%] ${
-                    message.role === 'user' ? 'text-right' : 'text-left'
-                  }`}
-                >
+                {/* Suggestion Chips */}
+                <div className="w-full max-w-2xl">
+                  <SuggestionChips onSuggestionClick={handleSuggestionClick} />
+                </div>
+              </div>
+            ) : (
+              <>
+                {activeChatroom.messages.map((message) => (
                   <div
-                    className={`inline-block p-3 rounded-2xl ${
-                      message.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
+                    key={message.id}
+                    className={`flex gap-3 animate-slide-up group ${
+                      message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
                     }`}
                   >
-                    {message.image && (
-                      <img
-                        src={message.image}
-                        alt="Uploaded"
-                        className="rounded-lg mb-2 max-w-full h-auto"
-                      />
-                    )}
-                    <p className="whitespace-pre-wrap break-words">{message.content}</p>
-                  </div>
-                  <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                    <span>{new Date(message.timestamp).toLocaleTimeString()}</span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => handleCopy(message.content)}
+                    <Avatar className="h-8 w-8 mt-1">
+                      <AvatarFallback
+                        className={
+                          message.role === 'user'
+                            ? 'bg-primary text-primary-foreground'
+                            : 'gradient-primary text-black'
+                        }
+                      >
+                        {message.role === 'user' ? (
+                          <User className="h-4 w-4" />
+                        ) : (
+                          <Sparkles className="h-4 w-4" />
+                        )}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <div
+                      className={`flex-1 max-w-[70%] ${
+                        message.role === 'user' ? 'text-right' : 'text-left'
+                      }`}
                     >
-                      <Copy className="h-3 w-3" />
-                    </Button>
+                      <div
+                        className={`inline-block p-3 rounded-2xl ${
+                          message.role === 'user'
+                            ? 'bg-black text-primary-foreground'
+                            : 'bg-muted'
+                        }`}
+                      >
+                        {message.image && (
+                          <img
+                            src={message.image}
+                            alt="Uploaded"
+                            className="rounded-lg mb-2 max-w-full h-auto"
+                          />
+                        )}
+                        <p className="whitespace-pre-wrap break-words">{message.content}</p>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                        <span>{new Date(message.timestamp).toLocaleTimeString()}</span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => handleCopy(message.content)}
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                ))}
 
-            {isTyping && (
-              <div className="flex gap-3 animate-slide-up">
-                <Avatar className="h-8 w-8 mt-1">
-                  <AvatarFallback className="gradient-primary text-white">
-                    <Sparkles className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="bg-muted p-3 rounded-2xl">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" />
-                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-100" />
-                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-200" />
+                {isTyping && (
+                  <div className="flex gap-3 animate-slide-up">
+                    <Avatar className="h-8 w-8 mt-1">
+                      <AvatarFallback className="gradient-primary text-white">
+                        <Sparkles className="h-4 w-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="bg-muted p-3 rounded-2xl">
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" />
+                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-100" />
+                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-200" />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </>
             )}
+          </div>
 
-            <div ref={messagesEndRef} />
-          </>
-        )}
-      </div>
-
-      {/* Input */}
-      <div className="border-t bg-card/50 backdrop-blur-sm p-4">
-        <div className="max-w-4xl mx-auto">
-          <PromptInputBox
-            onSend={handleSend}
-            isLoading={isTyping}
-            placeholder="Ask anything..."
-          />
-          <p className="text-xs text-muted-foreground text-center mt-3">
-            aetherAI can make mistakes. Consider checking important information.
-          </p>
+          {/* Input */}
+          <div className=" p-4">
+            <div className="max-w-4xl mx-auto">
+              <PromptInputBox
+                onSend={handleSend}
+                isLoading={isTyping}
+                placeholder="Ask anything..."
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

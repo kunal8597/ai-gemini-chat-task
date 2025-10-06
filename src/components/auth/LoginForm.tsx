@@ -15,6 +15,7 @@ import {
 import { useAuthStore } from '@/stores/authStore';
 import { toast } from 'sonner';
 import { Loader2, Sparkles, CheckCircle2, Phone } from 'lucide-react';
+import { BackgroundGradient } from "@/components/ui/bg-gradient";
 
 // Hardcoded popular countries
 const COUNTRIES = [
@@ -52,7 +53,7 @@ const otpSchema = z.object({
 type PhoneFormData = z.infer<typeof phoneSchema>;
 type OtpFormData = z.infer<typeof otpSchema>;
 
-export const LoginForm = () => {
+export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [phoneData, setPhoneData] = useState<PhoneFormData | null>(null);
@@ -116,193 +117,194 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-[#0a0a0f] via-[#1a1a2e] to-[#0f0f1e]">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
-
-      <div className="w-full max-w-md space-y-8 animate-fade-in relative z-10">
-        {/* Logo and Welcome */}
-        <div className="text-center space-y-6">
-          <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 mb-4 shadow-2xl shadow-purple-500/20">
-            <Sparkles className="w-12 h-12 text-white animate-pulse" />
+    <div className="relative min-h-screen flex items-center justify-center">
+      <BackgroundGradient 
+        className="dark:opacity-85"
+        gradientFrom="hsl(var(--gradient-start))"
+        gradientTo="hsl(var(--gradient-end))"
+      />
+      <div className="w-full max-w-md mx-auto p-6">
+        <div className="relative z-10 rounded-xl overflow-hidden  backdrop-blur-sm p-8">
+          {/* Logo and Welcome */}
+          <div className="text-center space-y-6">
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-gradient-to-br from-[hsl(var(--primary))] to-[hsl(var(--secondary))] mb-4">
+              <Sparkles className="w-12 h-12 text-white" />
+            </div>
+            
+            <div className="space-y-3">
+              <h1 className="text-4xl md:text-5xl font-bold font-mono text-black dark:text-white">
+                Gemini Chat
+              </h1>
+              <p className="text-xl text-black dark:text-white">
+                {step === 'phone' ? 'Welcome Back!' : 'Verify Your Identity'}
+              </p>
+              <p className="text-sm text-black/60 dark:text-white/60">
+                {step === 'phone' 
+                  ? 'Enter your phone number to continue' 
+                  : 'Enter the verification code we sent you'}
+              </p>
+            </div>
           </div>
-          
-          <div className="space-y-3">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              aetherAI
-            </h1>
-            <p className="text-xl text-white/80 font-light">
-              {step === 'phone' ? 'Welcome Back!' : 'Verify Your Identity'}
-            </p>
-            <p className="text-sm text-white/60">
-              {step === 'phone' 
-                ? 'Enter your phone number to continue' 
-                : 'Enter the verification code we sent you'}
-            </p>
-          </div>
-        </div>
 
-        {/* Form Card */}
-        <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-8 rounded-3xl shadow-2xl space-y-6">
-          {step === 'phone' ? (
-            <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="countryCode" className="text-sm font-medium text-white/80">
-                    Country / Region
-                  </Label>
-                  <Select
-                    value={phoneForm.watch('countryCode')}
-                    onValueChange={(value) => {
-                      phoneForm.setValue('countryCode', value);
-                      phoneForm.clearErrors('countryCode');
-                    }}
-                    defaultValue="+1"
-                  >
-                    <SelectTrigger 
-                      id="countryCode"
-                      className="h-12 bg-white/5 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
-                    >
-                      <SelectValue placeholder="Select country" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#1a1a2e] border-white/10 max-h-[300px]">
-                      {COUNTRIES.map((country) => (
-                        <SelectItem 
-                          key={country.code} 
-                          value={country.dialCode}
-                          className="text-white hover:bg-white/10 cursor-pointer transition-colors"
-                        >
-                          <span className="flex items-center gap-2">
-                            <span className="font-medium">{country.dialCode}</span>
-                            <span className="text-white/60">{country.name}</span>
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {phoneForm.formState.errors.countryCode && (
-                    <p className="text-xs text-red-400 flex items-center gap-1">
-                      {phoneForm.formState.errors.countryCode.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-sm font-medium text-white/80">
-                    Phone Number
-                  </Label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="1234567890"
-                      className="h-12 pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-purple-500/50 focus:ring-purple-500/20"
-                      {...phoneForm.register('phone')}
-                      onChange={(e) => {
-                        phoneForm.setValue('phone', e.target.value);
-                        phoneForm.clearErrors('phone');
+          {/* Form Section */}
+          <div className="mt-8 space-y-6">
+            {step === 'phone' ? (
+              <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-6">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="countryCode" className="text-sm font-medium text-black">
+                      Country / Region
+                    </Label>
+                    <Select
+                      value={phoneForm.watch('countryCode')}
+                      onValueChange={(value) => {
+                        phoneForm.setValue('countryCode', value);
+                        phoneForm.clearErrors('countryCode');
                       }}
-                    />
+                      defaultValue="+1"
+                    >
+                      <SelectTrigger 
+                        id="countryCode"
+                        className="h-12 bg-white/5 border-black/10 text-black focus:border-purple-500/50 focus:ring-purple-500/20"
+                      >
+                        <SelectValue placeholder="Select country" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#1a1a2e] border-white/10 max-h-[300px]">
+                        {COUNTRIES.map((country) => (
+                          <SelectItem 
+                            key={country.code} 
+                            value={country.dialCode}
+                            className="text-white hover:bg-white/10 cursor-pointer transition-colors"
+                          >
+                            <span className="flex items-center gap-2">
+                              <span className="font-medium">{country.dialCode}</span>
+                              <span className="text-white/60">{country.name}</span>
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {phoneForm.formState.errors.countryCode && (
+                      <p className="text-xs text-red-400 flex items-center gap-1">
+                        {phoneForm.formState.errors.countryCode.message}
+                      </p>
+                    )}
                   </div>
-                  {phoneForm.formState.errors.phone && (
-                    <p className="text-xs text-red-400 flex items-center gap-1">
-                      {phoneForm.formState.errors.phone.message}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-sm font-medium text-blackx">
+                      Phone Number
+                    </Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-black/20" />
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="1234567890"
+                        className="h-12 pl-10 bg-white/5 border-white/10 text-black placeholder:text-black/40 focus:border-purple-500/50 focus:ring-purple-500/20"
+                        {...phoneForm.register('phone')}
+                        onChange={(e) => {
+                          phoneForm.setValue('phone', e.target.value);
+                          phoneForm.clearErrors('phone');
+                        }}
+                      />
+                    </div>
+                    {phoneForm.formState.errors.phone && (
+                      <p className="text-xs text-red-400 flex items-center gap-1">
+                        {phoneForm.formState.errors.phone.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <Button 
+                  type="submit" 
+                  className="w-full h-12 text-base bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-500 hover:from-purple-600 hover:via-blue-600 hover:to-cyan-600 text-white border-0 font-semibold transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40" 
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Sending OTP...
+                    </>
+                  ) : (
+                    'Send OTP'
+                  )}
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={otpForm.handleSubmit(onOtpSubmit)} className="space-y-6 animate-slide-up">
+                <div className="text-center space-y-2">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/10 mb-2">
+                    <CheckCircle2 className="w-8 h-8 text-green-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-black">Verify Your Phone</h3>
+                  <p className="text-sm text-black/60">
+                    We sent a code to <span className="font-medium text-black">{phoneData?.countryCode} {phoneData?.phone}</span>
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="otp" className="text-sm font-medium text-black/80">
+                    Enter 6-Digit Code
+                  </Label>
+                  <Input
+                    id="otp"
+                    type="text"
+                    placeholder="000000"
+                    maxLength={6}
+                    {...otpForm.register('otp')}
+                    onChange={(e) => {
+                      otpForm.setValue('otp', e.target.value);
+                      otpForm.clearErrors('otp');
+                    }}
+                    className="h-14 text-center text-3xl tracking-[0.5em] font-bold bg-black/5 border-white/10 text-black  placeholder:text-black/20 focus:border-purple-500/50 focus:ring-purple-500/20"
+                    autoFocus
+                  />
+                  {otpForm.formState.errors.otp && (
+                    <p className="text-xs text-red-400 text-center">
+                      {otpForm.formState.errors.otp.message}
                     </p>
                   )}
                 </div>
-              </div>
 
-              <Button 
-                type="submit" 
-                className="w-full h-12 text-base bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 hover:from-purple-600 hover:via-blue-600 hover:to-cyan-600 text-white border-0 font-semibold transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40" 
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Sending OTP...
-                  </>
-                ) : (
-                  'Send OTP'
-                )}
-              </Button>
-            </form>
-          ) : (
-            <form onSubmit={otpForm.handleSubmit(onOtpSubmit)} className="space-y-6 animate-slide-up">
-              <div className="text-center space-y-2">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/10 mb-2">
-                  <CheckCircle2 className="w-8 h-8 text-green-400" />
-                </div>
-                <h3 className="text-lg font-semibold text-white">Verify Your Phone</h3>
-                <p className="text-sm text-white/60">
-                  We sent a code to <span className="font-medium text-white">{phoneData?.countryCode} {phoneData?.phone}</span>
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="otp" className="text-sm font-medium text-white/80">
-                  Enter 6-Digit Code
-                </Label>
-                <Input
-                  id="otp"
-                  type="text"
-                  placeholder="000000"
-                  maxLength={6}
-                  {...otpForm.register('otp')}
-                  onChange={(e) => {
-                    otpForm.setValue('otp', e.target.value);
-                    otpForm.clearErrors('otp');
-                  }}
-                  className="h-14 text-center text-3xl tracking-[0.5em] font-bold bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-purple-500/50 focus:ring-purple-500/20"
-                  autoFocus
-                />
-                {otpForm.formState.errors.otp && (
-                  <p className="text-xs text-red-400 text-center">
-                    {otpForm.formState.errors.otp.message}
-                  </p>
-                )}
-              </div>
-
-              <Button 
-                type="submit" 
-                className="w-full h-12 text-base bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 hover:from-purple-600 hover:via-blue-600 hover:to-cyan-600 text-white border-0 font-semibold transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40" 
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Verifying...
-                  </>
-                ) : (
-                  'Verify & Continue'
-                )}
-              </Button>
-
-              <div className="text-center">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="text-sm text-white/60 hover:text-white hover:bg-white/5"
-                  onClick={() => {
-                    setStep('phone');
-                    otpForm.reset();
-                  }}
+                <Button 
+                  type="submit" 
+                  className="w-full h-12 text-base bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 hover:from-purple-600 hover:via-blue-600 hover:to-cyan-600 text-white border-0 font-semibold transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40" 
+                  disabled={loading}
                 >
-                  Change Phone Number
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Verifying...
+                    </>
+                  ) : (
+                    'Verify & Continue'
+                  )}
                 </Button>
-              </div>
-            </form>
-          )}
-        </div>
 
-        {/* Helper Text */}
-        <p className="text-center text-xs text-white/40">
-          By continuing, you agree to our Terms of Service and Privacy Policy
-        </p>
+                <div className="text-center">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-sm text-white/60 hover:text-white hover:bg-white/5"
+                    onClick={() => {
+                      setStep('phone');
+                      otpForm.reset();
+                    }}
+                  >
+                    Change Phone Number
+                  </Button>
+                </div>
+              </form>
+            )}
+          </div>
+
+          {/* Helper Text */}
+          <p className="mt-6 text-center text-xs text-black/60 dark:text-white/60">
+            By continuing, you agree to our Terms of Service and Privacy Policy
+          </p>
+        </div>
       </div>
     </div>
   );

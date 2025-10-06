@@ -1,30 +1,23 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useChatStore } from '@/stores/chatStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { SuggestionChips } from './SuggestionChips';
+import { PromptInputBox } from '@/components/ui/ai-prompt-box';
 import {
   ArrowLeft,
-  Send,
-  ImagePlus,
   Copy,
   Sparkles,
   User,
   Moon,
   Sun,
-  Loader2,
-  Mic,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export const ChatInterface = () => {
-  const [input, setInput] = useState('');
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const activeChatroom = useChatStore((state) => state.getActiveChatroom());
   const addMessage = useChatStore((state) => state.addMessage);
@@ -44,16 +37,6 @@ export const ChatInterface = () => {
     }
   }, [activeChatroom, navigate]);
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const simulateAIResponse = (userMessage: string) => {
     setTyping(true);
@@ -109,22 +92,35 @@ export const ChatInterface = () => {
     }
   };
 
-  const handleSend = () => {
-    if ((!input.trim() && !selectedImage) || !activeChatroom) return;
+  const handleSend = (messageContent: string, files?: File[]) => {
+    if (!activeChatroom || (!messageContent.trim() && !files?.length)) return;
 
-    const messageContent = input.trim();
-    addMessage(activeChatroom.id, {
-      content: messageContent || '📷 Image',
-      role: 'user',
-      image: selectedImage || undefined,
-    });
+    let imageUrl: string | undefined = undefined;
 
-    toast.success('Message sent');
-    setInput('');
-    setSelectedImage(null);
+    if (files && files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imageUrl = e.target?.result as string;
+        
+        addMessage(activeChatroom.id, {
+          content: messageContent || '📷 Image',
+          role: 'user',
+          image: imageUrl,
+        });
 
-    // Simulate AI response
-    simulateAIResponse(messageContent);
+        toast.success('Message sent');
+        simulateAIResponse(messageContent);
+      };
+      reader.readAsDataURL(files[0]);
+    } else {
+      addMessage(activeChatroom.id, {
+        content: messageContent,
+        role: 'user',
+      });
+
+      toast.success('Message sent');
+      simulateAIResponse(messageContent);
+    }
   };
 
   const handleCopy = (content: string) => {
@@ -267,72 +263,16 @@ export const ChatInterface = () => {
 
       {/* Input */}
       <div className="border-t bg-card/50 backdrop-blur-sm p-4">
-        {selectedImage && (
-          <div className="mb-3 relative inline-block animate-slide-up">
-            <img
-              src={selectedImage}
-              alt="Selected"
-              className="h-24 rounded-xl border-2 border-primary/20"
-            />
-            <Button
-              variant="destructive"
-              size="icon"
-              className="absolute -top-2 -right-2 h-7 w-7 rounded-full shadow-lg"
-              onClick={() => setSelectedImage(null)}
-            >
-              ×
-            </Button>
-          </div>
-        )}
-        <div className="flex gap-2 items-end">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageSelect}
+        <div className="max-w-4xl mx-auto">
+          <PromptInputBox
+            onSend={handleSend}
+            isLoading={isTyping}
+            placeholder="Ask anything..."
           />
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-12 w-12 rounded-xl bg-secondary/50 border-border/50 hover:bg-secondary shrink-0"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <ImagePlus className="h-5 w-5" />
-          </Button>
-          <div className="flex-1 relative">
-            <Textarea
-              placeholder="Ask anything ..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
-              className="resize-none min-h-[48px] max-h-32 bg-secondary/50 border-border/50 rounded-xl pr-12"
-              rows={1}
-            />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-2 bottom-2 h-8 w-8 hover:bg-transparent"
-            >
-              <Mic className="h-4 w-4 text-muted-foreground" />
-            </Button>
-          </div>
-          <Button
-            className="h-12 w-12 rounded-xl gradient-primary hover:opacity-90 transition-opacity shrink-0"
-            onClick={handleSend}
-            disabled={!input.trim() && !selectedImage}
-          >
-            <Send className="h-5 w-5" />
-          </Button>
+          <p className="text-xs text-muted-foreground text-center mt-3">
+            aetherAI can make mistakes. Consider checking important information.
+          </p>
         </div>
-        <p className="text-xs text-muted-foreground text-center mt-3">
-          Gemini can make mistakes. Consider checking important information.
-        </p>
       </div>
     </div>
   );

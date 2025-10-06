@@ -132,13 +132,13 @@ export function LoginForm() {
             </div>
             
             <div className="space-y-3">
-              <h1 className="text-4xl md:text-5xl font-bold font-mono text-black dark:text-white">
+              <h1 className="text-4xl md:text-5xl font-bold font-mono text-black ">
                 Gemini Chat
               </h1>
-              <p className="text-xl text-black dark:text-white">
+              <p className="text-xl text-black ">
                 {step === 'phone' ? 'Welcome Back!' : 'Verify Your Identity'}
               </p>
-              <p className="text-sm text-black/60 dark:text-white/60">
+              <p className="text-sm text-black/60 ">
                 {step === 'phone' 
                   ? 'Enter your phone number to continue' 
                   : 'Enter the verification code we sent you'}
@@ -192,7 +192,7 @@ export function LoginForm() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-sm font-medium text-blackx">
+                    <Label htmlFor="phone" className="text-sm font-medium text-black">
                       Phone Number
                     </Label>
                     <div className="relative">
@@ -219,7 +219,7 @@ export function LoginForm() {
 
                 <Button 
                   type="submit" 
-                  className="w-full h-12 text-base bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-500 hover:from-purple-600 hover:via-blue-600 hover:to-cyan-600 text-white border-0 font-semibold transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40" 
+                  className="w-full h-12 text-base bg-gradient-to-r from-purple-500  hover:from-purple-600 hover:via-blue-600 hover:to-cyan-600 text-white border-0 font-semibold transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40" 
                   disabled={loading}
                 >
                   {loading ? (
@@ -301,7 +301,7 @@ export function LoginForm() {
           </div>
 
           {/* Helper Text */}
-          <p className="mt-6 text-center text-xs text-black/60 dark:text-white/60">
+          <p className="mt-6 text-center text-xs text-black/60 ">
             By continuing, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>

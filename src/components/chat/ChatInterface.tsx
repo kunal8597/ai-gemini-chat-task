@@ -1,6 +1,5 @@
 import { useRef, useEffect } from 'react';
 import { useChatStore } from '@/stores/chatStore';
-import { useThemeStore } from '@/stores/themeStore';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { SuggestionChips } from './SuggestionChips';
@@ -10,8 +9,6 @@ import {
   Copy,
   Sparkles,
   User,
-  Moon,
-  Sun,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -24,8 +21,6 @@ export const ChatInterface = () => {
   const addMessage = useChatStore((state) => state.addMessage);
   const isTyping = useChatStore((state) => state.isTyping);
   const setTyping = useChatStore((state) => state.setTyping);
-  const isDark = useThemeStore((state) => state.isDark);
-  const toggleTheme = useThemeStore((state) => state.toggleTheme);
   const navigate = useNavigate();
 
   useEffect(() => {

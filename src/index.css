@@ -8,7 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 220% 91%;
+    --background: 220 20% 91%;
     --foreground: 220 9% 15%;
 
     --card: 0 0% 100%;
@@ -38,7 +38,7 @@ All colors MUST be HSL.
 
     --radius: 1rem;
 
-    /* Gradient colors - Light mode */
+    /* Gradient colors */
     --gradient-start: 0 0% 100%;    /* white */
     --gradient-end: 262 83% 58%;    /* purple */
   }
@@ -72,9 +72,9 @@ All colors MUST be HSL.
     --input: 222 14% 18%;
     --ring: 262 80% 65%;
 
-    /* Gradient colors - Dark mode */
-    --gradient-start: 262 83% 58%;  /* purple */
-    --gradient-end: 217 91% 60%;    /* blue */
+    /* Same gradient in dark mode */
+    --gradient-start: 0 0% 100%;    /* white */
+    --gradient-end: 262 83% 58%;    /* purple */
   }
 }
 
@@ -90,12 +90,21 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
+  /* Radial gradient for background */
+  .bg-gradient-radial {
+    background: radial-gradient(
+      125% 125% at 50% 10%, 
+      hsl(var(--gradient-start)) 40%, 
+      hsl(var(--gradient-end)) 100%
+    );
+  }
+
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-mid)), hsl(var(--gradient-end)));
+    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-mid)), hsl(var(--gradient-end)));
+    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -24,8 +24,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
-import { Plus, MessageSquare, Trash2, Moon, Sun, LogOut, Search } from 'lucide-react';
-import { useThemeStore } from '@/stores/themeStore';
+import { Plus, MessageSquare, Trash2, LogOut, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,8 +39,6 @@ export const Dashboard = () => {
   const deleteChatroom = useChatStore((state) => state.deleteChatroom);
   const setActiveChatroom = useChatStore((state) => state.setActiveChatroom);
   const logout = useAuthStore((state) => state.logout);
-  const isDark = useThemeStore((state) => state.isDark);
-  const toggleTheme = useThemeStore((state) => state.toggleTheme);
   const navigate = useNavigate();
 
   // Debounced search
@@ -94,7 +91,6 @@ export const Dashboard = () => {
             <h1 className="text-2xl font-bold font-mono">Gemini Chat</h1>
           </div>
           <div className="flex items-center gap-2">
-         
             <Button 
               variant="ghost" 
               size="icon" 

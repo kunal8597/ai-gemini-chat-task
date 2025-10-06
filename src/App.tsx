@@ -33,7 +33,7 @@ const App = () => {
               gradientTo="hsl(var(--gradient-end))"
             />
             {/* Main content container with glass effect */}
-            <div className="">
+            <div className="min-h-screen ">
               <main className="rounded-xl ">
                 <Routes>
                   <Route

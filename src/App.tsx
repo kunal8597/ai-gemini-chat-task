@@ -8,6 +8,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ChatPage from "./pages/ChatPage";
 import NotFound from "./pages/NotFound";
 import { useAuthStore } from "./stores/authStore";
+import { BackgroundGradient } from "@/components/ui/bg-gradient";
 
 const queryClient = new QueryClient();
 
@@ -25,30 +26,44 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route
-              path="/"
-              element={isAuthenticated ? <Navigate to="/dashboard" /> : <LoginForm />}
+          <div className="min-h-screen overflow-hidden relative">
+            <BackgroundGradient
+              className="dark:opacity-85"
+              gradientFrom="hsl(var(--gradient-start))"
+              gradientTo="hsl(var(--gradient-end))"
             />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <DashboardPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/chat"
-              element={
-                <ProtectedRoute>
-                  <ChatPage />
-                </ProtectedRoute>
-              }
-            />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+            {/* Main content container with glass effect */}
+            <div className="">
+              <main className="rounded-xl ">
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      isAuthenticated ? <Navigate to="/dashboard" /> : <LoginForm />
+                    }
+                  />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/chat"
+                    element={
+                      <ProtectedRoute>
+                        <ChatPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+            </div>
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

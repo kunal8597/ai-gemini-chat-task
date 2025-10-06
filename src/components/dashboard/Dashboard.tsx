@@ -83,32 +83,24 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b bg-card/30 backdrop-blur-md sticky top-0 z-10">
+      <header className=" bg-card/30 backdrop-blur-md sticky top-0 z-10">
         <div className="container mx-auto px-4 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
               <MessageSquare className="w-5 h-5 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold gradient-text">Gemini Chat</h1>
+            <h1 className="text-2xl font-bold font-mono">Gemini Chat</h1>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label="Toggle theme"
-              className="rounded-xl"
-            >
-              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
+         
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={handleLogout} 
               aria-label="Logout"
-              className="rounded-xl"
+              className="rounded-xl hover:bg-red-500"
             >
               <LogOut className="h-5 w-5" />
             </Button>
@@ -117,7 +109,7 @@ export const Dashboard = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 ">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Search and Create */}
           <div className="flex flex-col sm:flex-row gap-4 animate-slide-up">
@@ -132,7 +124,7 @@ export const Dashboard = () => {
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="gradient-primary h-12 px-6 rounded-xl hover:opacity-90 transition-opacity">
+                <Button className=" bg-black h-12 px-6 rounded-xl hover:bg-violet-950 transition-opacity">
                   <Plus className="mr-2 h-5 w-5" />
                   New Chat
                 </Button>
